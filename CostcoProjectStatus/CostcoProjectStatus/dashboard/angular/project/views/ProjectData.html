@@ -1,0 +1,78 @@
+﻿<!--change breadcrumb features -->
+<style>
+    .breadcrumbColor {
+        background-color: #F0F0F0;
+        border-radius: 12px;
+        border-width: 10px;
+        border-color: #050505;
+        icon: initial;
+    }
+</style>
+
+<ol class="breadcrumb  breadcrumbColor">
+    <li>
+        <a href="#DashboardCtrl">Verticals</a>
+    </li>
+    <li>
+        <a href="#ProjectList/{{ vId }}">{{ vName }}</a>
+    </li>
+    <li>
+        <a href="#ProjectUpdates/{{pId}}/{{ pName}}">{{ pName }}</a>
+    </li>
+    <li class="active">Email ID: {{ dataExtractionId }}</li>
+</ol> 
+<br />
+
+
+<style>
+    .list-group-item{
+        padding-bottom:10px;
+        padding-top:10px;
+        padding-left:30px;
+        padding-right:50px;
+        margin-left:70px;
+        margin-right:70px;
+        margin-top:10px;
+     
+    }
+</style>
+
+    <form class="form-group ">
+        <ul class="list-group">
+            <li class="list-group-item"><label>ProjectName: </label>{{pName}}</li>
+            <li class="list-group-item"><label>Phase: </label>{{phase}}</li>
+            <li class="list-group-item"><label>DateReceived: </label>{{date}}</li>
+            <li class="list-group-item">
+                <table>
+                    <tr ng-repeat="statusUpdate in statusUpdateList">
+                        <td>{{ statusUpdate.UpdateKey }}:</td>
+                        <td>{{ statusUpdate.UpdateValue }}</td>
+                    </tr>
+                </table>
+            </li>
+        </ul>
+    </form>
+
+<!--<div border =10px >
+    <table width="50%">
+        <tr>
+            <td>Project Name:</td>
+            <td> {{ pName }}</td>
+        </tr>
+        <tr>
+            <td>Phase:</td>
+            <td>{{ phase }}</td>
+        </tr>
+        <tr>
+            <td>Date Received:</td>
+            <td> {{ date}}</td>
+        </tr>
+        <tr>
+            <td colspan="2"><br /></td>
+        </tr>
+        <tr ng-repeat="statusUpdate in statusUpdateList">
+            <td>{{ statusUpdate.UpdateKey }}:</td>
+            <td>{{ statusUpdate.UpdateValue }}</td>
+        </tr>
+    </table>
+</div>-->

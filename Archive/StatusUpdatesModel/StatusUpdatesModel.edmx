@@ -1,0 +1,642 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="CostcoDevStatusModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AllowedApp">
+          <Key>
+            <PropertyRef Name="AppId" />
+          </Key>
+          <Property Name="AppId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="varchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AllowedUser">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Email" Type="varchar" MaxLength="240" Nullable="false" />
+          <Property Name="RoleID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Phase">
+          <Key>
+            <PropertyRef Name="PhaseID" />
+          </Key>
+          <Property Name="PhaseID" Type="int" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="24" />
+          <Property Name="Description" Type="varchar" MaxLength="240" />
+        </EntityType>
+        <EntityType Name="Project">
+          <Key>
+            <PropertyRef Name="ProjectID" />
+          </Key>
+          <Property Name="ProjectID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ProjectName" Type="varchar" MaxLength="240" />
+          <Property Name="Description" Type="varchar" MaxLength="400" />
+          <Property Name="VerticalID" Type="int" />
+        </EntityType>
+        <EntityType Name="ProjectPhase">
+          <Key>
+            <PropertyRef Name="PhaseID" />
+            <PropertyRef Name="ProjectID" />
+            <PropertyRef Name="UpdateKey" />
+          </Key>
+          <Property Name="PhaseID" Type="int" Nullable="false" />
+          <Property Name="ProjectID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="UpdateKey" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="UpdateCount" Type="int" />
+          <Property Name="LatestUpdate" Type="smalldatetime" />
+        </EntityType>
+        <EntityType Name="ProjectUpdate">
+          <Key>
+            <PropertyRef Name="ProjectUpdateID" />
+          </Key>
+          <Property Name="ProjectUpdateID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ProjectID" Type="uniqueidentifier" />
+          <Property Name="Subject" Type="varchar" MaxLength="400" />
+          <Property Name="Body" Type="varchar(max)" />
+        </EntityType>
+        <EntityType Name="StatusUpdate">
+          <Key>
+            <PropertyRef Name="ProjectID" />
+            <PropertyRef Name="ProjectUpdateID" />
+            <PropertyRef Name="UpdateKey" />
+          </Key>
+          <Property Name="ProjectID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ProjectUpdateID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="PhaseID" Type="int" />
+          <Property Name="VerticalID" Type="int" />
+          <Property Name="RecordDate" Type="smalldatetime" />
+          <Property Name="UpdateKey" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="UpdateValue" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="UserRole">
+          <Key>
+            <PropertyRef Name="RoleID" />
+          </Key>
+          <Property Name="RoleID" Type="int" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" />
+          <Property Name="Description" Type="varchar" MaxLength="240" />
+        </EntityType>
+        <EntityType Name="Vertical">
+          <Key>
+            <PropertyRef Name="VerticalID" />
+          </Key>
+          <Property Name="VerticalID" Type="int" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" />
+          <Property Name="Description" Type="varchar" MaxLength="240" />
+        </EntityType>
+        <Association Name="FK__AllowedUs__RoleI__09A971A2">
+          <End Role="UserRole" Type="Self.UserRole" Multiplicity="1" />
+          <End Role="AllowedUser" Type="Self.AllowedUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserRole">
+              <PropertyRef Name="RoleID" />
+            </Principal>
+            <Dependent Role="AllowedUser">
+              <PropertyRef Name="RoleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Project__Vertica__17F790F9">
+          <End Role="Vertical" Type="Self.Vertical" Multiplicity="0..1" />
+          <End Role="Project" Type="Self.Project" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Vertical">
+              <PropertyRef Name="VerticalID" />
+            </Principal>
+            <Dependent Role="Project">
+              <PropertyRef Name="VerticalID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ProjectPh__Phase__1AD3FDA4">
+          <End Role="Phase" Type="Self.Phase" Multiplicity="1" />
+          <End Role="ProjectPhase" Type="Self.ProjectPhase" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Phase">
+              <PropertyRef Name="PhaseID" />
+            </Principal>
+            <Dependent Role="ProjectPhase">
+              <PropertyRef Name="PhaseID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ProjectPh__Proje__1BC821DD">
+          <End Role="Project" Type="Self.Project" Multiplicity="1" />
+          <End Role="ProjectPhase" Type="Self.ProjectPhase" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project">
+              <PropertyRef Name="ProjectID" />
+            </Principal>
+            <Dependent Role="ProjectPhase">
+              <PropertyRef Name="ProjectID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ProjectUp__Proje__44CA3770">
+          <End Role="Project" Type="Self.Project" Multiplicity="0..1" />
+          <End Role="ProjectUpdate" Type="Self.ProjectUpdate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project">
+              <PropertyRef Name="ProjectID" />
+            </Principal>
+            <Dependent Role="ProjectUpdate">
+              <PropertyRef Name="ProjectID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__StatusUpd__Phase__489AC854">
+          <End Role="Phase" Type="Self.Phase" Multiplicity="0..1" />
+          <End Role="StatusUpdate" Type="Self.StatusUpdate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Phase">
+              <PropertyRef Name="PhaseID" />
+            </Principal>
+            <Dependent Role="StatusUpdate">
+              <PropertyRef Name="PhaseID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__StatusUpd__Proje__47A6A41B">
+          <End Role="Project" Type="Self.Project" Multiplicity="1" />
+          <End Role="StatusUpdate" Type="Self.StatusUpdate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project">
+              <PropertyRef Name="ProjectID" />
+            </Principal>
+            <Dependent Role="StatusUpdate">
+              <PropertyRef Name="ProjectID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__StatusUpd__Proje__4A8310C6">
+          <End Role="ProjectUpdate" Type="Self.ProjectUpdate" Multiplicity="1" />
+          <End Role="StatusUpdate" Type="Self.StatusUpdate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProjectUpdate">
+              <PropertyRef Name="ProjectUpdateID" />
+            </Principal>
+            <Dependent Role="StatusUpdate">
+              <PropertyRef Name="ProjectUpdateID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__StatusUpd__Verti__498EEC8D">
+          <End Role="Vertical" Type="Self.Vertical" Multiplicity="0..1" />
+          <End Role="StatusUpdate" Type="Self.StatusUpdate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Vertical">
+              <PropertyRef Name="VerticalID" />
+            </Principal>
+            <Dependent Role="StatusUpdate">
+              <PropertyRef Name="VerticalID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="CostcoDevStatusModelStoreContainer">
+          <EntitySet Name="AllowedApp" EntityType="Self.AllowedApp" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AllowedUser" EntityType="Self.AllowedUser" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Phase" EntityType="Self.Phase" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Project" EntityType="Self.Project" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProjectPhase" EntityType="Self.ProjectPhase" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProjectUpdate" EntityType="Self.ProjectUpdate" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StatusUpdate" EntityType="Self.StatusUpdate" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserRole" EntityType="Self.UserRole" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Vertical" EntityType="Self.Vertical" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__AllowedUs__RoleI__09A971A2" Association="Self.FK__AllowedUs__RoleI__09A971A2">
+            <End Role="UserRole" EntitySet="UserRole" />
+            <End Role="AllowedUser" EntitySet="AllowedUser" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Project__Vertica__17F790F9" Association="Self.FK__Project__Vertica__17F790F9">
+            <End Role="Vertical" EntitySet="Vertical" />
+            <End Role="Project" EntitySet="Project" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ProjectPh__Phase__1AD3FDA4" Association="Self.FK__ProjectPh__Phase__1AD3FDA4">
+            <End Role="Phase" EntitySet="Phase" />
+            <End Role="ProjectPhase" EntitySet="ProjectPhase" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ProjectPh__Proje__1BC821DD" Association="Self.FK__ProjectPh__Proje__1BC821DD">
+            <End Role="Project" EntitySet="Project" />
+            <End Role="ProjectPhase" EntitySet="ProjectPhase" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ProjectUp__Proje__44CA3770" Association="Self.FK__ProjectUp__Proje__44CA3770">
+            <End Role="Project" EntitySet="Project" />
+            <End Role="ProjectUpdate" EntitySet="ProjectUpdate" />
+          </AssociationSet>
+          <AssociationSet Name="FK__StatusUpd__Phase__489AC854" Association="Self.FK__StatusUpd__Phase__489AC854">
+            <End Role="Phase" EntitySet="Phase" />
+            <End Role="StatusUpdate" EntitySet="StatusUpdate" />
+          </AssociationSet>
+          <AssociationSet Name="FK__StatusUpd__Proje__47A6A41B" Association="Self.FK__StatusUpd__Proje__47A6A41B">
+            <End Role="Project" EntitySet="Project" />
+            <End Role="StatusUpdate" EntitySet="StatusUpdate" />
+          </AssociationSet>
+          <AssociationSet Name="FK__StatusUpd__Proje__4A8310C6" Association="Self.FK__StatusUpd__Proje__4A8310C6">
+            <End Role="ProjectUpdate" EntitySet="ProjectUpdate" />
+            <End Role="StatusUpdate" EntitySet="StatusUpdate" />
+          </AssociationSet>
+          <AssociationSet Name="FK__StatusUpd__Verti__498EEC8D" Association="Self.FK__StatusUpd__Verti__498EEC8D">
+            <End Role="Vertical" EntitySet="Vertical" />
+            <End Role="StatusUpdate" EntitySet="StatusUpdate" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="CostcoDevStatusModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Phase">
+          <Key>
+            <PropertyRef Name="PhaseID" />
+          </Key>
+          <Property Name="PhaseID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="24" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="240" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ProjectPhases" Relationship="CostcoDevStatusModel.FK__ProjectPh__Phase__1AD3FDA4" FromRole="Phase" ToRole="ProjectPhase" />
+          <NavigationProperty Name="StatusUpdates" Relationship="CostcoDevStatusModel.FK__StatusUpd__Phase__489AC854" FromRole="Phase" ToRole="StatusUpdate" />
+        </EntityType>
+        <EntityType Name="UserRole">
+          <Key>
+            <PropertyRef Name="RoleID" />
+          </Key>
+          <Property Name="RoleID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="240" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="AllowedUsers" Relationship="CostcoDevStatusModel.FK__AllowedUs__RoleI__70DDC3D8" FromRole="UserRole" ToRole="AllowedUser" />
+        </EntityType>
+        <EntityType Name="Vertical">
+          <Key>
+            <PropertyRef Name="VerticalID" />
+          </Key>
+          <Property Name="VerticalID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="240" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Projects" Relationship="CostcoDevStatusModel.FK__Project__Vertica__17F790F9" FromRole="Vertical" ToRole="Project" />
+          <NavigationProperty Name="StatusUpdates" Relationship="CostcoDevStatusModel.FK__StatusUpd__Verti__498EEC8D" FromRole="Vertical" ToRole="StatusUpdate" />
+        </EntityType>
+        <EntityContainer Name="CostcoDevStatusEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Phases" EntityType="Self.Phase" />
+          <EntitySet Name="UserRoles" EntityType="Self.UserRole" />
+          <EntitySet Name="Verticals" EntityType="Self.Vertical" />
+          <EntitySet Name="AllowedUsers" EntityType="CostcoDevStatusModel.AllowedUser" />
+          <AssociationSet Name="FK__AllowedUs__RoleI__70DDC3D8" Association="CostcoDevStatusModel.FK__AllowedUs__RoleI__70DDC3D8">
+            <End Role="UserRole" EntitySet="UserRoles" />
+            <End Role="AllowedUser" EntitySet="AllowedUsers" />
+          </AssociationSet>
+          <EntitySet Name="Projects" EntityType="CostcoDevStatusModel.Project" />
+          <EntitySet Name="ProjectPhases" EntityType="CostcoDevStatusModel.ProjectPhase" />
+          <AssociationSet Name="FK__ProjectPh__Phase__1AD3FDA4" Association="CostcoDevStatusModel.FK__ProjectPh__Phase__1AD3FDA4">
+            <End Role="Phase" EntitySet="Phases" />
+            <End Role="ProjectPhase" EntitySet="ProjectPhases" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Project__Vertica__17F790F9" Association="CostcoDevStatusModel.FK__Project__Vertica__17F790F9">
+            <End Role="Vertical" EntitySet="Verticals" />
+            <End Role="Project" EntitySet="Projects" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ProjectPh__Proje__1BC821DD" Association="CostcoDevStatusModel.FK__ProjectPh__Proje__1BC821DD">
+            <End Role="Project" EntitySet="Projects" />
+            <End Role="ProjectPhase" EntitySet="ProjectPhases" />
+          </AssociationSet>
+          <EntitySet Name="AllowedApps" EntityType="CostcoDevStatusModel.AllowedApp" />
+          <EntitySet Name="ProjectUpdates" EntityType="CostcoDevStatusModel.ProjectUpdate" />
+          <EntitySet Name="StatusUpdates" EntityType="CostcoDevStatusModel.StatusUpdate" />
+          <AssociationSet Name="FK__StatusUpd__Phase__489AC854" Association="CostcoDevStatusModel.FK__StatusUpd__Phase__489AC854">
+            <End Role="Phase" EntitySet="Phases" />
+            <End Role="StatusUpdate" EntitySet="StatusUpdates" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ProjectUp__Proje__44CA3770" Association="CostcoDevStatusModel.FK__ProjectUp__Proje__44CA3770">
+            <End Role="Project" EntitySet="Projects" />
+            <End Role="ProjectUpdate" EntitySet="ProjectUpdates" />
+          </AssociationSet>
+          <AssociationSet Name="FK__StatusUpd__Proje__47A6A41B" Association="CostcoDevStatusModel.FK__StatusUpd__Proje__47A6A41B">
+            <End Role="Project" EntitySet="Projects" />
+            <End Role="StatusUpdate" EntitySet="StatusUpdates" />
+          </AssociationSet>
+          <AssociationSet Name="FK__StatusUpd__Proje__4A8310C6" Association="CostcoDevStatusModel.FK__StatusUpd__Proje__4A8310C6">
+            <End Role="ProjectUpdate" EntitySet="ProjectUpdates" />
+            <End Role="StatusUpdate" EntitySet="StatusUpdates" />
+          </AssociationSet>
+          <AssociationSet Name="FK__StatusUpd__Verti__498EEC8D" Association="CostcoDevStatusModel.FK__StatusUpd__Verti__498EEC8D">
+            <End Role="Vertical" EntitySet="Verticals" />
+            <End Role="StatusUpdate" EntitySet="StatusUpdates" />
+          </AssociationSet>
+        </EntityContainer>
+        <EnumType Name="Phases">
+          <Member Name="Start_Up" Value="0" />
+          <Member Name="Solution_Outline" Value="1" />
+          <Member Name="Macro_Design" Value="2" />
+          <Member Name="Micro_Design" Value="3" />
+          <Member Name="Build_Test" Value="4" />
+          <Member Name="Deploy" Value="5" />
+          <Member Name="Transition_Close" Value="6" />
+        </EnumType>
+        <EnumType Name="Verticals">
+          <Member Name="Warehouse_Solutions" Value="0" />
+          <Member Name="Merchandising_Solutions" Value="1" />
+          <Member Name="Membership_Solutions" Value="2" />
+          <Member Name="Distribution_Solutions" Value="3" />
+          <Member Name="International_Solutions" Value="4" />
+          <Member Name="Ancillary_Solutions" Value="5" />
+          <Member Name="eBusiness_Soluttions" Value="6" />
+          <Member Name="Corporate_Solutions" Value="7" />
+        </EnumType>
+        <EntityType Name="AllowedUser">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="Guid" Nullable="false" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="240" FixedLength="false" Unicode="false" />
+          <Property Name="RoleID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="UserRole" Relationship="CostcoDevStatusModel.FK__AllowedUs__RoleI__70DDC3D8" FromRole="AllowedUser" ToRole="UserRole" />
+        </EntityType>
+        <Association Name="FK__AllowedUs__RoleI__70DDC3D8">
+          <End Type="CostcoDevStatusModel.UserRole" Role="UserRole" Multiplicity="1" />
+          <End Type="CostcoDevStatusModel.AllowedUser" Role="AllowedUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserRole">
+              <PropertyRef Name="RoleID" />
+            </Principal>
+            <Dependent Role="AllowedUser">
+              <PropertyRef Name="RoleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Project">
+          <Key>
+            <PropertyRef Name="ProjectID" />
+          </Key>
+          <Property Name="ProjectID" Type="Guid" Nullable="false" />
+          <Property Name="ProjectName" Type="String" MaxLength="240" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="400" FixedLength="false" Unicode="false" />
+          <Property Name="VerticalID" Type="Int32" />
+          <NavigationProperty Name="Vertical" Relationship="CostcoDevStatusModel.FK__Project__Vertica__17F790F9" FromRole="Project" ToRole="Vertical" />
+          <NavigationProperty Name="ProjectPhases" Relationship="CostcoDevStatusModel.FK__ProjectPh__Proje__1BC821DD" FromRole="Project" ToRole="ProjectPhase" />
+          <NavigationProperty Name="ProjectUpdates" Relationship="CostcoDevStatusModel.FK__ProjectUp__Proje__44CA3770" FromRole="Project" ToRole="ProjectUpdate" />
+          <NavigationProperty Name="StatusUpdates" Relationship="CostcoDevStatusModel.FK__StatusUpd__Proje__47A6A41B" FromRole="Project" ToRole="StatusUpdate" />
+        </EntityType>
+        <EntityType Name="ProjectPhase">
+          <Key>
+            <PropertyRef Name="PhaseID" />
+            <PropertyRef Name="ProjectID" />
+            <PropertyRef Name="UpdateKey" />
+          </Key>
+          <Property Name="PhaseID" Type="Int32" Nullable="false" />
+          <Property Name="ProjectID" Type="Guid" Nullable="false" />
+          <Property Name="UpdateKey" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="UpdateCount" Type="Int32" />
+          <Property Name="LatestUpdate" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="Phase" Relationship="CostcoDevStatusModel.FK__ProjectPh__Phase__1AD3FDA4" FromRole="ProjectPhase" ToRole="Phase" />
+          <NavigationProperty Name="Project" Relationship="CostcoDevStatusModel.FK__ProjectPh__Proje__1BC821DD" FromRole="ProjectPhase" ToRole="Project" />
+        </EntityType>
+        <Association Name="FK__ProjectPh__Phase__1AD3FDA4">
+          <End Type="CostcoDevStatusModel.Phase" Role="Phase" Multiplicity="1" />
+          <End Type="CostcoDevStatusModel.ProjectPhase" Role="ProjectPhase" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Phase">
+              <PropertyRef Name="PhaseID" />
+            </Principal>
+            <Dependent Role="ProjectPhase">
+              <PropertyRef Name="PhaseID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Project__Vertica__17F790F9">
+          <End Type="CostcoDevStatusModel.Vertical" Role="Vertical" Multiplicity="0..1" />
+          <End Type="CostcoDevStatusModel.Project" Role="Project" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Vertical">
+              <PropertyRef Name="VerticalID" />
+            </Principal>
+            <Dependent Role="Project">
+              <PropertyRef Name="VerticalID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ProjectPh__Proje__1BC821DD">
+          <End Type="CostcoDevStatusModel.Project" Role="Project" Multiplicity="1" />
+          <End Type="CostcoDevStatusModel.ProjectPhase" Role="ProjectPhase" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project">
+              <PropertyRef Name="ProjectID" />
+            </Principal>
+            <Dependent Role="ProjectPhase">
+              <PropertyRef Name="ProjectID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="AllowedApp">
+          <Key>
+            <PropertyRef Name="AppId" />
+          </Key>
+          <Property Name="AppId" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="ProjectUpdate">
+          <Key>
+            <PropertyRef Name="ProjectUpdateID" />
+          </Key>
+          <Property Name="ProjectUpdateID" Type="Guid" Nullable="false" />
+          <Property Name="ProjectID" Type="Guid" />
+          <Property Name="Subject" Type="String" MaxLength="400" FixedLength="false" Unicode="false" />
+          <Property Name="Body" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Project" Relationship="CostcoDevStatusModel.FK__ProjectUp__Proje__44CA3770" FromRole="ProjectUpdate" ToRole="Project" />
+          <NavigationProperty Name="StatusUpdates" Relationship="CostcoDevStatusModel.FK__StatusUpd__Proje__4A8310C6" FromRole="ProjectUpdate" ToRole="StatusUpdate" />
+        </EntityType>
+        <EntityType Name="StatusUpdate">
+          <Key>
+            <PropertyRef Name="ProjectID" />
+            <PropertyRef Name="ProjectUpdateID" />
+            <PropertyRef Name="UpdateKey" />
+          </Key>
+          <Property Name="ProjectID" Type="Guid" Nullable="false" />
+          <Property Name="ProjectUpdateID" Type="Guid" Nullable="false" />
+          <Property Name="PhaseID" Type="Int32" />
+          <Property Name="VerticalID" Type="Int32" />
+          <Property Name="RecordDate" Type="DateTime" Precision="0" />
+          <Property Name="UpdateKey" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="UpdateValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Phase" Relationship="CostcoDevStatusModel.FK__StatusUpd__Phase__489AC854" FromRole="StatusUpdate" ToRole="Phase" />
+          <NavigationProperty Name="Project" Relationship="CostcoDevStatusModel.FK__StatusUpd__Proje__47A6A41B" FromRole="StatusUpdate" ToRole="Project" />
+          <NavigationProperty Name="ProjectUpdate" Relationship="CostcoDevStatusModel.FK__StatusUpd__Proje__4A8310C6" FromRole="StatusUpdate" ToRole="ProjectUpdate" />
+          <NavigationProperty Name="Vertical" Relationship="CostcoDevStatusModel.FK__StatusUpd__Verti__498EEC8D" FromRole="StatusUpdate" ToRole="Vertical" />
+        </EntityType>
+        <Association Name="FK__StatusUpd__Phase__489AC854">
+          <End Type="CostcoDevStatusModel.Phase" Role="Phase" Multiplicity="0..1" />
+          <End Type="CostcoDevStatusModel.StatusUpdate" Role="StatusUpdate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Phase">
+              <PropertyRef Name="PhaseID" />
+            </Principal>
+            <Dependent Role="StatusUpdate">
+              <PropertyRef Name="PhaseID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ProjectUp__Proje__44CA3770">
+          <End Type="CostcoDevStatusModel.Project" Role="Project" Multiplicity="0..1" />
+          <End Type="CostcoDevStatusModel.ProjectUpdate" Role="ProjectUpdate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project">
+              <PropertyRef Name="ProjectID" />
+            </Principal>
+            <Dependent Role="ProjectUpdate">
+              <PropertyRef Name="ProjectID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__StatusUpd__Proje__47A6A41B">
+          <End Type="CostcoDevStatusModel.Project" Role="Project" Multiplicity="1" />
+          <End Type="CostcoDevStatusModel.StatusUpdate" Role="StatusUpdate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project">
+              <PropertyRef Name="ProjectID" />
+            </Principal>
+            <Dependent Role="StatusUpdate">
+              <PropertyRef Name="ProjectID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__StatusUpd__Proje__4A8310C6">
+          <End Type="CostcoDevStatusModel.ProjectUpdate" Role="ProjectUpdate" Multiplicity="1" />
+          <End Type="CostcoDevStatusModel.StatusUpdate" Role="StatusUpdate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProjectUpdate">
+              <PropertyRef Name="ProjectUpdateID" />
+            </Principal>
+            <Dependent Role="StatusUpdate">
+              <PropertyRef Name="ProjectUpdateID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__StatusUpd__Verti__498EEC8D">
+          <End Type="CostcoDevStatusModel.Vertical" Role="Vertical" Multiplicity="0..1" />
+          <End Type="CostcoDevStatusModel.StatusUpdate" Role="StatusUpdate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Vertical">
+              <PropertyRef Name="VerticalID" />
+            </Principal>
+            <Dependent Role="StatusUpdate">
+              <PropertyRef Name="VerticalID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="CostcoDevStatusModelStoreContainer" CdmEntityContainer="CostcoDevStatusEntities">
+          <EntitySetMapping Name="Phases">
+            <EntityTypeMapping TypeName="CostcoDevStatusModel.Phase">
+              <MappingFragment StoreEntitySet="Phase">
+                <ScalarProperty Name="PhaseID" ColumnName="PhaseID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserRoles">
+            <EntityTypeMapping TypeName="CostcoDevStatusModel.UserRole">
+              <MappingFragment StoreEntitySet="UserRole">
+                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Verticals">
+            <EntityTypeMapping TypeName="CostcoDevStatusModel.Vertical">
+              <MappingFragment StoreEntitySet="Vertical">
+                <ScalarProperty Name="VerticalID" ColumnName="VerticalID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AllowedUsers">
+            <EntityTypeMapping TypeName="CostcoDevStatusModel.AllowedUser">
+              <MappingFragment StoreEntitySet="AllowedUser">
+                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Projects">
+            <EntityTypeMapping TypeName="CostcoDevStatusModel.Project">
+              <MappingFragment StoreEntitySet="Project">
+                <ScalarProperty Name="VerticalID" ColumnName="VerticalID" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="ProjectName" ColumnName="ProjectName" />
+                <ScalarProperty Name="ProjectID" ColumnName="ProjectID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProjectPhases">
+            <EntityTypeMapping TypeName="CostcoDevStatusModel.ProjectPhase">
+              <MappingFragment StoreEntitySet="ProjectPhase">
+                <ScalarProperty Name="LatestUpdate" ColumnName="LatestUpdate" />
+                <ScalarProperty Name="UpdateCount" ColumnName="UpdateCount" />
+                <ScalarProperty Name="UpdateKey" ColumnName="UpdateKey" />
+                <ScalarProperty Name="ProjectID" ColumnName="ProjectID" />
+                <ScalarProperty Name="PhaseID" ColumnName="PhaseID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AllowedApps">
+            <EntityTypeMapping TypeName="CostcoDevStatusModel.AllowedApp">
+              <MappingFragment StoreEntitySet="AllowedApp">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="AppId" ColumnName="AppId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProjectUpdates">
+            <EntityTypeMapping TypeName="CostcoDevStatusModel.ProjectUpdate">
+              <MappingFragment StoreEntitySet="ProjectUpdate">
+                <ScalarProperty Name="Body" ColumnName="Body" />
+                <ScalarProperty Name="Subject" ColumnName="Subject" />
+                <ScalarProperty Name="ProjectID" ColumnName="ProjectID" />
+                <ScalarProperty Name="ProjectUpdateID" ColumnName="ProjectUpdateID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StatusUpdates">
+            <EntityTypeMapping TypeName="CostcoDevStatusModel.StatusUpdate">
+              <MappingFragment StoreEntitySet="StatusUpdate">
+                <ScalarProperty Name="UpdateValue" ColumnName="UpdateValue" />
+                <ScalarProperty Name="UpdateKey" ColumnName="UpdateKey" />
+                <ScalarProperty Name="RecordDate" ColumnName="RecordDate" />
+                <ScalarProperty Name="VerticalID" ColumnName="VerticalID" />
+                <ScalarProperty Name="PhaseID" ColumnName="PhaseID" />
+                <ScalarProperty Name="ProjectUpdateID" ColumnName="ProjectUpdateID" />
+                <ScalarProperty Name="ProjectID" ColumnName="ProjectID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

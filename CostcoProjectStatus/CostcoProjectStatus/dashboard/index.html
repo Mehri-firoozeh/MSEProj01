@@ -1,0 +1,87 @@
+﻿<html>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Costco Dashboard</title>
+<!-- Bootstrap -->
+<link href="../Content/bootstrap.min.css" rel="stylesheet" />
+<body>
+
+    <div ng-app="dashboardApp">
+        <style type="text/css">
+            form.tab-form-demo .tab-pane {
+                margin: 20px 20px;
+            }
+        </style>
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">Costco Dashboard</a>
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="#">Home <span class="sr-only">(current)</span></a></li>
+                        <li><a href="#/Updates">Updates</a></li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Verticals <span class="caret"></span></a>
+                            <ul class="dropdown-menu" id="VerticalList"></ul>
+                        </li>
+                     <!--<li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Filter Projects <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">Date</a></li>
+                                <li><a href="#">Manager</a></li>
+                            </ul>
+                        </li>-->   
+                        <li><a href="#/OverviewChart" class="pull-right">Overview Chart</a></li>
+                        <!--<li><a href="#/EditProject">Edit Projects</a></li>-->
+                    </ul>
+                   <!-- <form class="navbar-form navbar-left" role="search">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Search Projects" id="searchText">
+                        </div>
+                        <button type="submit" class="btn btn-default" id="searchProj">Submit</button>
+                    </form> -->
+                    <div>
+                        <ul class="nav navbar-nav navbar-right">
+                        
+                        <li id="login"></li>
+                    </ul>
+                    </div>
+                </div><!-- /.navbar-collapse -->
+            </div><!-- /.container-fluid -->
+        </nav>
+        <div ng-view=""></div>
+    </div>
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="../Scripts/bootstrap.min.js"></script>
+    <script src="../Scripts/angular.min.js"></script>
+    <script src="../Scripts/angular-route.js"></script>
+    <script src="../Scripts/angular-animate.js"></script>
+    <script src="../Scripts/angular-aria.js"></script>
+    <script src="../Scripts/angular-cookies.js"></script>
+    <script src="../Scripts/angular-messages.js"></script>
+    <script src="../Scripts/angular-resource.js"></script>
+    <script src="../Scripts/angular-sanitize.js"></script>
+    <script src="../Scripts/angular-touch.js"></script>
+    <script src="../Scripts/smart-table.min.js"></script>
+<script src="../Scripts/ui-bootstrap-tpls-1.1.2.min.js"></script>
+    <script src="../Scripts/highcharts.js"></script>
+    <script src="../Scripts/highcharts-ng.js"></script>
+    <script src="angular/project/controllers/tabsController.js"></script>
+    <script src="angular/core/controllers/app.js"></script>
+    <script src="angular/project/controllers/project-List.js"></script>
+    
+
+</body>
+</html>

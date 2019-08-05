@@ -1,0 +1,1 @@
+Database=acsm_ce07accfa3fc58f;Data Source=us-cdbr-azure-west-c.cloudapp.net;User Id=b000aec76ac9dd;Password=756154cf

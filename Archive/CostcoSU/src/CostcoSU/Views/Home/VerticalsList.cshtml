@@ -1,0 +1,12 @@
+﻿@{
+    ViewData["Title"] = "Project List Page";
+}
+<div class="row">
+    <div class="col-md-3">
+        @foreach ( Vertical vertical in Enum.GetValues(typeof(Vertical)))
+        {
+            String verticalImage = "../images/" + @vertical.ToString() + ".png";
+            <img src = @verticalImage>
+        }
+    </div>
+</div>
